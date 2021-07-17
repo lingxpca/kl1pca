@@ -1,0 +1,148 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include "type.h"
+
+int kernell1pca (ENTITYINFOptr entityinfo, PROBLEMINFOptr probleminfo);  
+
+int kernell1pca (ENTITYINFOptr entityinfo, PROBLEMINFOptr probleminfo){
+	double **K=entityinfo->K; 
+	int i = probleminfo->i;
+	int j = probleminfo->j;
+	int k = probleminfo->k;
+	int l = probleminfo->l;
+	int q = probleminfo->q;
+
+	int numattributes_m = entityinfo->numattributes_m; 
+	double *c = probleminfo->c;
+	double *ck_plus1 = probleminfo->ck_plus1;
+	double *ck = probleminfo->ck;
+	int jstar;
+	double maxK;
+	double Kvalue;
+	double ckc1;
+	double ckc2;
+	double sum;
+	double **cstar=probleminfo->cstar;
+
+	double *kc = probleminfo->c;
+	double ckc;  
+		
+	for (l=0;l<q;++l)
+	{/*finding sign vector cstar*/
+		maxK=0.0;	
+		for (j=0;j<numattributes_m;++j)
+		{
+			Kvalue=0.0;
+			for (i=0;i<numattributes_m;++i) Kvalue += abs(K[i][j]);
+			if(maxK < Kvalue/sqrt(K[j][j]))
+			{
+				maxK = Kvalue/sqrt(K[j][j]);
+				jstar=j;
+			}
+		}	
+	  
+	  for (i=0;i<numattributes_m;++i) c[i]= (K[i][jstar] > 0) ? 1 : (( K[i][jstar] < 0) ? -1 : 0);
+				  
+		ck_plus1 = c;
+		while(ckc2 != 0) 
+		{ 
+		  ck = ck_plus1;		
+			for (i=0;i<numattributes_m;++i) 
+			{ 
+			  sum =0.0;
+			 	for (j=0; j<numattributes_m;++j) sum += K[i][j]*ck[j];  
+				ck_plus1[i] = (sum> 0) ? 1 : (( sum< 0) ? -1 : 0); 
+			}		
+			
+			ckc2 = 0.0;
+			for (j=0; j<numattributes_m;++j) 
+			{
+				ckc1 = 0.0;
+				for (i=0; i<numattributes_m;++i) ckc1 += (ck[i]-ck_plus1[i])*K[i][j];
+				ckc2 += ckc1*(ck[j]-ck_plus1[j]); 
+		 	} 	  	    			
+		}
+		for (i=0;i<numattributes_m;++i) cstar[i][l] = ck_plus1[i];
+	 	
+	 	for (i=0;i<numattributes_m;++i) fprintf(stdout,"%f\t", cstar[i][l]);
+	 	fprintf(stdout,"\n");
+	 	
+	  /*update kernelmatrix*/	
+	 	for (i=0;i<numattributes_m;++i) 
+		{ 
+			kc[i] =0.0; 
+			for (j=0; j<numattributes_m;++j) kc[i] += K[i][j]*cstar[j][l];  
+		} 
+	 
+		ckc = 0.0; 
+		for (i = 0;i<numattributes_m;++i) ckc += cstar[i][l]*kc[i];  		 
+	  
+	  for (i = 0;i<numattributes_m;++i) 
+		{ 
+			for (j=0;j<numattributes_m;++j)
+			{ 
+			 	for (k=0;k<numattributes_m;++k)
+				{ 
+					K[i][j] -= kc[i]*kc[j]/ckc; 
+				} 
+				fprintf(stdout,"%f\t",K[i][j]);
+			}
+			fprintf(stdout,"\n");
+		}
+		fprintf(stdout,"\n");
+	}
+		
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
