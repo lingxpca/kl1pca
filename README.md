@@ -4,6 +4,6 @@ In this paper we describe a method for denoising data using kernelized principal
 clustering, and dimensionality reduction. Numerical experiments on Amsterdam Library of Object Images nd the MNIST handwritten digits demonstrate the proposed method performs better in terms of mean quared error than L2-norm analogue as well as on toy synthetic data. The proposed method is applied to different data sets and the performances are reported.
 
 # Instructions:
-### make clean && make
-### go to exe folder
-### ./krpca filename #ofcomponents rbf l1 variance
+* make clean && make
+* go to exe folder
+* ./krpca filename #ofcomponents rbf l1 variance
