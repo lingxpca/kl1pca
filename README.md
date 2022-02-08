@@ -5,5 +5,5 @@ clustering, and dimensionality reduction. Numerical experiments on Amsterdam Lib
 
 # Instructions:
 * make clean && make
-* go to exe folder
+* go to exec folder
 * ./krpca filename #ofcomponents rbf l1 variance
