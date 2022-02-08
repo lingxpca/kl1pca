@@ -1,28 +1,17 @@
-#SYSTEM     = linux64
-#LIBFORMAT  = static_pic
-#
-#
-#GUROBIDIR      =	/opt/gurobi810
 CC  = gcc
-
-# ---------------------------------------------------------------------
-# Compiler options
-# ---------------------------------------------------------------------
-
 COPT  = -m64 -pedantic -Wall -g
-
 # ---------------------------------------------------------------------
 # Link options and libraries
 # ---------------------------------------------------------------------
-LIBS =-L/usr/local/lib -lgsl -lgslcblas -lm
+LIBS =-L/usr/local/lib -lmkl_rt -lm
 #GUROBILIBDIR   = $(GUROBIDIR)/$(SYSTEM)/lib
 #GUROBIINCDIR   = $(GUROBIDIR)/$(SYSTEM)/include
 
-CLNFLAGS  =  -m64 -lm -lpthread
+CLNFLAGS  =  -m64 -lm -lpthread 
 CFLAGS    := $(COPT)
 
 
-APPL_NAME := kernel_l1pca
+APPL_NAME := krpca
 
 EXEC = exec/
 
@@ -33,7 +22,7 @@ OBJECT = obj/
 APPL_SRCS := \
 	main.c \
 	read_data.c \
- 	kernel_l1pca.c \
+ 	krpca.c \
  	pfkpca.c
 
 APPL_OBJS = $(APPL_SRCS:.c=.o)
@@ -53,13 +42,6 @@ $(APPL_OBJS): $(OBJECT)%.o : $(SOURCE)%.c
 	$(CC) -c $(CFLAGS) $< -o $@
 
 
-#exec/mipex3: obj/mipex3.o
-#	$(CC) $(CFLAGS) obj/mipex3.o -o exec/mipex3 $(CLNFLAGS)
-#
-##lpex1: lpex1.o
-##	$(CC) $(CFLAGS) lpex1.o -o lpex1 $(CLNFLAGS)
-#obj/mipex3.o: src/mipex3.c
-#	$(CC) -c $(CFLAGS) src/mipex3.c -o obj/mipex3.o
 
 depend :
 	makedepend -I/usr/local/include/linux -I/usr/lib/gcc/x86_64-linux-gnu/4.4/include $(APPL_SRCS)
@@ -67,8 +49,6 @@ depend :
 clean :
 	/bin/rm -f $(APPL_OBJS)
 	/bin/rm -f $(APPL_NAME)
-
-# DO NOT DELETE THIS LINE -- make depend depends on it.
 
 src/main.o: src/type.h
 src/read_data.o: src/type.h
