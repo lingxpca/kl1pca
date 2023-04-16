@@ -13,7 +13,7 @@ Prerequisites
 * Intel-MKL
 
 # Instructions:
-Prerequeist: You need install intel one-API mkl library
+Prerequeist: Need install Intel OneAPI. After installation set enviroment variable . /opt/intel/oneapi/setvars.sh
 * make clean && make
 * go to exec folder
 * ./krpca filename #ofcomponents rbf l1 variance
