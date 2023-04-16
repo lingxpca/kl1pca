@@ -5,13 +5,35 @@
 
 int readdata(IOINFOptr ioinfo, ENTITYINFOptr entityinfo, PROBLEMINFOptr probleminfo);
 
+void rc_find(FILE *fp,int* rows,int* cols)
+{    
+    *rows = 0;
+    int i,j;
+    *cols = 0; 
+     
+    while((i=fgetc(fp))!=EOF)
+    {
+            if (i == ' ') {
+                ++j;
+            } 
+            else if (i == '\n') {
+                (*rows)++; 
+                *cols=j+1;
+                j = 0;   
+            }
+    } 
+    fclose(fp);
+}
+
 int readdata(IOINFOptr ioinfo, ENTITYINFOptr entityinfo, PROBLEMINFOptr probleminfo)
 {
   FILE *datafile = ioinfo->datafile;
   int status = ioinfo->status; 
   int i = probleminfo->i;
   int j = probleminfo->j;
-
+  FILE *getrc = fopen(ioinfo->problem,"r");   
+  rc_find(getrc,&(entityinfo->numentities_n),&(entityinfo->numattributes_m)); 
+	
   status = 0;
   /* read number of observations */
   fscanf  (datafile, "%d %d", &(entityinfo->numentities_n), &(entityinfo->numattributes_m));
